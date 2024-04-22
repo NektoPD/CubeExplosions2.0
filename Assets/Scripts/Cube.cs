@@ -7,8 +7,8 @@ using UnityEngine.EventSystems;
 public class Cube : MonoBehaviour, IPointerClickHandler
 {
     private Rigidbody _rigidbody;
-    private CubeGenerator _cuTubeGenerator;
-    private CubeExploder _cubeExploder;
+    private CubeGenerator _generator;
+    private CubeExploder _exploder;
     private int _currentCubeGenarationPossibility = 100;
     private int _minCubeGenrationPossibility = 1;
     private int _maxCubeGenrationPossibility = 101;
@@ -16,13 +16,11 @@ public class Cube : MonoBehaviour, IPointerClickHandler
     private float _explosionRadius = 2;
     private int _scaleDivider = 2;
 
-    public Cube GetCube => this;
-
     private void Awake()
     {
-        _cubeExploder = GetComponent<CubeExploder>();
+        _exploder = GetComponent<CubeExploder>();
         _rigidbody = GetComponent<Rigidbody>();
-        _cuTubeGenerator = GetComponent<CubeGenerator>();
+        _generator = GetComponent<CubeGenerator>();
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -31,11 +29,14 @@ public class Cube : MonoBehaviour, IPointerClickHandler
 
         if (probability <= _currentCubeGenarationPossibility)
         {
-            _cuTubeGenerator.GenerateCube();
+            _generator.GenerateCubes(this);
+        }
+        else
+        {
+            _exploder.Explode();
         }
 
-        _cubeExploder.Explode();
-        gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 
     public void Init()
@@ -43,7 +44,7 @@ public class Cube : MonoBehaviour, IPointerClickHandler
         transform.localScale /= _scaleDivider;
         _rigidbody.AddExplosionForce(_explosionForce, transform.position, _explosionRadius);
         ReduceGenerationPossibilityByHalf();
-        _cubeExploder.IncreaseExplosionParameters();
+        _exploder.IncreaseExplosionParameters();
     }
 
     private void ReduceGenerationPossibilityByHalf()

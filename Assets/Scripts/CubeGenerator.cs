@@ -1,23 +1,22 @@
 using UnityEngine;
+using System;
+using Random = UnityEngine.Random;
 
 public class CubeGenerator : MonoBehaviour
 {
-    private Cube _cube;
     private int _minCubeCount = 2;
     private int _maxCubeCount = 6;
 
-    private void Awake()
+    public void GenerateCubes(Cube cube)
     {
-        _cube = GetComponent<Cube>();
-    }
-
-    public void GenerateCube()
-    {
+        if (cube == null)
+            throw new ArgumentNullException(nameof(cube));
+        
         int cubeCount = Random.Range(_minCubeCount, _maxCubeCount);
 
         for (int i = 0; i < cubeCount; i++)
         {
-            Cube newCube = Instantiate(_cube.GetCube, transform.position, Quaternion.identity);
+            Cube newCube = Instantiate(cube, transform.position, Quaternion.identity);
             newCube.Init();
         }
     }
