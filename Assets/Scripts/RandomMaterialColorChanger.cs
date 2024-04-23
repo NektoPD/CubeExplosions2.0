@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent (typeof(MeshRenderer))]
 public class RandomMaterialColorChanger : MonoBehaviour
 {
     private MeshRenderer _meshRenderer;
